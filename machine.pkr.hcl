@@ -47,8 +47,28 @@ build {
   provisioner "shell" {
     inline = [
       "pkg update",
-      "pkg install -y git stow zsh",
-      "echo 'FreeBSD 15.1-RELEASE Automated Build' > /etc/motd"
+      "pkg install -y git stow zsh curl bash python3 py311-pip",
+      "ln -s /usr/local/bin/bash /bin/bash",
+      "ln -s /usr/local/bin/python3 /usr/local/bin/python",
+      "echo 'update_motd=\"NO\"' >> /etc/rc.conf",
+      "echo 'FreeBSD dotfiles' > /etc/motd"
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "echo 'me:\\' > /root/.login_conf",
+      "echo '    :charset=UTF-8:\\' >> /root/.login_conf",
+      "echo '    :lang=en_US.UTF-8:' >> /root/.login_conf",
+      "chmod 600 /root/.login_conf",
+      "echo 'echo \"$@\"' > /usr/local/bin/sudo",
+      "chmod +x /usr/local/bin/sudo",
+      "mv /usr/bin/stat /usr/bin/stat.bak",
+      "ln -s /usr/local/bin/gstat /usr/bin/stat",
+      "pip install --break-system-packages powerline-status",
+      "curl -fsSL https://dotfiles.gbraad.nl/install.sh | sh",
+      "pw usermod root -s /usr/local/bin/zsh"
     ]
   }
 }
+
