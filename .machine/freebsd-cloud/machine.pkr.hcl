@@ -24,8 +24,8 @@ source "qemu" "freebsd" {
   disk_interface     = "virtio"
 
   cd_files = [
-    ".packer/freebsd-cloud/cloud-init/user-data",
-    ".packer/freebsd-cloud/cloud-init/meta-data"
+    ".machine/freebsd-cloud/cloud-init/user-data",
+    ".machine/freebsd-cloud/cloud-init/meta-data"
   ]
   cd_label = "CIDATA"
 
@@ -46,7 +46,7 @@ build {
   sources = ["source.qemu.freebsd"]
 
   provisioner "shell-local" {
-    script = ".packer/machinefile.sh"
+    script = ".machine/machinefile.sh"
     environment_vars = [
       "TARGET=freebsd-cloud",
       "USER_PASSWD=password",

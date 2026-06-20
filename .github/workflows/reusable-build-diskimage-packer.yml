@@ -57,14 +57,14 @@ jobs:
         with:
           as_user: runner
           run: |
-            packer init  .packer/${{ inputs.machine_name }}/machine.pkr.hcl
-            packer build .packer/${{ inputs.machine_name }}/machine.pkr.hcl
+            packer init  .machine/${{ inputs.machine_name }}/machine.pkr.hcl
+            packer build .machine/${{ inputs.machine_name }}/machine.pkr.hcl
 
       - name: Create and push disk image
         run: |
           TAG=$(date +'%y%m%d')
 
-          podman build -t ghcr.io/gbraad-dotfiles/${{ inputs.machine_name }}-disk:latest -f .packer/${{ inputs.machine_name }}/Containerfile-disk .
+          podman build -t ghcr.io/gbraad-dotfiles/${{ inputs.machine_name }}-disk:latest -f .machine/${{ inputs.machine_name }}/Containerfile-disk .
           podman tag ghcr.io/gbraad-dotfiles/${{ inputs.machine_name }}-disk:latest ghcr.io/gbraad-dotfiles/${{ inputs.machine_name }}-disk:${TAG}
 
           podman login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
